@@ -134,9 +134,8 @@ Data Name | Data Type | Data Description | Conformance | Notes
 **EndLocation** | Data Frame | The LOCATION along a single road<br>in a single direction when work zone<br>impact ends and the traffic returns to<br>normal (See EndLocation) | Required | The method used for<br>designating impact<br>should be included in a<br>static Metadata file (see Section 2.7)
 **wz-Status** | Enum | The status of the work zone | Optional | See Enumerated Type Definitions
 **totalLanes** | Data element | The total number of lanes associated<br>with the road segment designated by<br>the BeginLocation and EndLocation | Optional | A segment is a part of a<br>roadway in a single<br>direction designated by<br>a start (BeginLocation)<br>and end (EndLocation)
-**openLanes** | Enum | The laneType that is opened on the road segment<br>designated by<br>the work zone BeginLocation | Optional |
-**closedLanes** | Enum | The laneType that is closed due<br>to the work zone on the road segment<br>designated by the Begin Location<br>and EndLocation | Required | More detailed lane<br>impacts / status will be<br>described in Version 2<br>of the specification
-**closedShoulders** | Enum | An enumerated type identifying the<br>shoulder lanes that are closed | Optional | To explicitly state that no<br>shoulders are closed,<br>use none
+**vehicleImpact** | Enum | The impact to vehiclular lanes along a single road in<br>a single direction | Required |
+**LaneImpacts** | List | List of laneImpact objects (data frames) defining impact(s) to particular lane(s) along a single road in<br>a single direction | Optional |
 **workersPresent** | Data element | A flag indicating that there are<br>workers present in the work zone | Optional | 
 **reducedSpdPosted** | Data element | The reduced speed limit posted in<br>the work zone | Optional |
 **RoadRestrictions** | Enum | One or more roadRestriction flags<br>indicating restrictions apply to the<br>work zone road segment associated<br>with the work zone bounded by the<br>begin / end locations | Optional | More details may be<br>added to future WZDx<br>versions; these are<br>included as flags rather<br>than detailed restrictions
@@ -214,6 +213,20 @@ Data Name | Data Description | Conformance | Notes
 **milepost-ver** | An accurately linear distance measured<br>against a milepost<br>marker along a roadway where<br>the work zone begins | Optional<br><br>If included only<br>one milepost<br>value (-est or -ver<br>is needed) |  |
 **crossStreet** | The cross street along a<br>roadway where the work zone<br>area ends and the traffic returns<br>to normal | Conditional | Required when Road Classification is arterial
 
+#### Table 7 LaneImpact data frame
+Data Name | Data Description | Conformance | Notes
+--------- | ---------------- | ----------- | -----
+**laneType** | Type of lane defined by allowed use and relative location | Required | laneType values are required to define a LaneImpacts record
+**impactType** | The impact to mobility for this lane | Required | values will be closed, open, shift-left, shift-right and defined in an Enum below.
+**Restrictions** | List of restriction data frames (objects) for this lane | Optional | multiple values allowed
+
+#### Table 7.1 Restriction data frame
+Data Name | Data Description | Conformance | Notes
+--------- | ---------------- | ----------- | -----
+**restrictionType** | the type of restriction from the Enum list of allowed restriction values | Required | restrictionType values are required for Restriction objects. This will mostly be the exting Enum, add flagged as new type.
+**restrictionValue** | the measure of the restriction type | Conditional | must be used in conjunition with restrictionUnits
+**restrictionUnits** | the units of measure of the restrictionValue | Conditional | must be specified if a restrictionValue is used
+
 ### Enumerated Types
 #### Table 7. Enumerated Types Table
 Data Element | Used by | Allowed Values | Notes | Source
@@ -221,7 +234,7 @@ Data Element | Used by | Allowed Values | Notes | Source
 **wz-Status** | WorkZoneActivity | See Enumerated Type<br>Definitions (Table 8) 
 **roadDirection** | BeginLocation | <ul><li>northbound</li><li>eastbound</li><li>southbound</li><li>westbound</li></ul> |  | Adapted from<br>TMDD link-<br>alignment
 **roadRestriction** | RoadRestrictions | <ul><li>no-trucks</li><li>travel-peak-hours-only</li><li>hov-3</li><li>hov-2</li><li>no-parking</li><li>bike-lane</li><li>ramp</li><li>towing-prohibited</li><li>permitted-oversize-loads-<br>prohibited (this applies to<br>annual oversize load<br>permits</li><li>reduced-width</li><li>reduced-height</li><li>reduced-length</li><li>reduced-weight</li><ul><li>axle-load-limit</li><li>gross-weight-limit</li></ul></ul> | Included one<br>or more<br>flags as needed | See<br>definitions<br>below
-**laneType** | openLanes,<br>closedLanes | <ul><li>all</li><li>left-lane</li><li>right-lane</li><li>left-2-lanes</li><li>left-3-lanes</li>right-2-lanes</li><li>right-3-lanes</li><li>center</li><li>middle-lane</li><li>right-turning-lane</li><li>left-turning-lane</li><li>right-exit-lane</li><li>left-exit-lane</li><li>right-merging-lane</li><li>left-merging-lane</li><li>right-exit-ramp</li><li>right-second-exit-ramp</li><li>right-entrance-ramp</li><li>right-second-entrance-ramp</li><li>left-exit-ramp</li><li>left-second-exit-ramp</li><li>left-entrance-ramp</li><li>left-second-entrance-ramp</li><li>sidewalk</li><li>bike-lane</li><li>none</li><li>unknown</li><li>alternate-flow-lane</li><li>shift-left</li><li>shift-right</li></ul> |  | Adapted from<br>TMDD<br>LaneRoadway
+**laneType** | openLanes,<br>closedLanes | <ul><li>all</li><ul><li>lane-1</li><ul><li>lane-2</li><ul><li>lane-3</li><ul><li>lane-4</li><ul><li>lane-5</li><ul><li>lane-6</li><ul><li>lane-7</li><ul><li>lane-8</li><li>left-lane</li><li>right-lane</li><li>left-2-lanes</li><li>left-3-lanes</li>right-2-lanes</li><li>right-3-lanes</li><li>center</li><li>middle-lane</li><li>right-turning-lane</li><li>left-turning-lane</li><li>right-exit-lane</li><li>left-exit-lane</li><li>right-merging-lane</li><li>left-merging-lane</li><li>right-exit-ramp</li><li>right-second-exit-ramp</li><li>right-entrance-ramp</li><li>right-second-entrance-ramp</li><li>left-exit-ramp</li><li>left-second-exit-ramp</li><li>left-entrance-ramp</li><li>left-second-entrance-ramp</li><li>sidewalk</li><li>bike-lane</li><li>none</li><li>unknown</li><li>alternate-flow-lane</li><li>shift-left</li><li>shift-right</li></ul> |  | Adapted from<br>TMDD<br>LaneRoadway
 **closedShoulders** | WorkZoneActivity | <ul><li>outside</li><li>inside</li><li>both</li><li>none</li><li>unknown</li></ul> |  | Adapted from<br>TMDD<br>LaneRoadway
 
 ### Enumerated Type Definitions
