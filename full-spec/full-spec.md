@@ -135,10 +135,10 @@ Data Name | Data Type | Data Description | Conformance | Notes
 **wz-Status** | Enum | The status of the work zone | Optional | See Enumerated Type Definitions
 **totalLanes** | Data element | The total number of lanes associated<br>with the road segment designated by<br>the BeginLocation and EndLocation | Optional | A segment is a part of a<br>roadway in a single<br>direction designated by<br>a start (BeginLocation)<br>and end (EndLocation)
 **vehicleImpact** | Enum | The impact to vehiclular lanes along a single road in<br>a single direction | Required |
-**LaneImpacts** | List | List of laneImpact objects (data frames) defining impact(s) to particular lane(s) along a single road in<br>a single direction | Optional |
+**LaneImpacts** | List | List of LaneImpact objects from the LaneImapct data frame defining impact(s) to particular lane(s) along a single road in<br>a single direction | Optional |
 **workersPresent** | Data element | A flag indicating that there are<br>workers present in the work zone | Optional | 
 **reducedSpdPosted** | Data element | The reduced speed limit posted in<br>the work zone | Optional |
-**RoadRestrictions** | Enum | One or more roadRestriction flags<br>indicating restrictions apply to the<br>work zone road segment associated<br>with the work zone bounded by the<br>begin / end locations | Optional | More details may be<br>added to future WZDx<br>versions; these are<br>included as flags rather<br>than detailed restrictions
+**RoadRestrictions** | Enum | One or more roadRestriction flags indicating restrictions apply to the work zone road segment associated with the work zone bounded by the<br>begin / end locations | Optional | These are included as flags rather than detailed restrictions. Detailed restrictions are coded to specific lanes in the LaneImpact list.
 **description** | Data element | Short free text description of work zone | Optional | This will be populated<br>with formal phrases in a<br>later WZDx version
 **issuingOrganization** | Data element | The organization issuing the data feed | Optional | Will create a list in a<br>future version
 **timestampEventCreation** | Data element | The time and date when the activity<br>or event was created | Optional |
@@ -213,32 +213,34 @@ Data Name | Data Description | Conformance | Notes
 **milepost-ver** | An accurately linear distance measured<br>against a milepost<br>marker along a roadway where<br>the work zone begins | Optional<br><br>If included only<br>one milepost<br>value (-est or -ver<br>is needed) |  |
 **crossStreet** | The cross street along a<br>roadway where the work zone<br>area ends and the traffic returns<br>to normal | Conditional | Required when Road Classification is arterial
 
-#### Table 7 LaneImpact data frame
+#### Table 7.0 LaneImpact data frame
 Data Name | Data Description | Conformance | Notes
 --------- | ---------------- | ----------- | -----
 **laneType** | Type of lane defined by allowed use and relative location | Required | laneType values are required to define a LaneImpacts record
-**impactType** | The impact to mobility for this lane | Required | values will be closed, open, shift-left, shift-right and defined in an Enum below.
-**Restrictions** | List of restriction data frames (objects) for this lane | Optional | multiple values allowed
+**impactType** | The impact to mobility for this lane | Required | values will be n an Enum below.
+**Restrictions** | List of Restriction objects from teh Restrictions data frame for this lane | Optional | multiple values allowed
 
 #### Table 7.1 Restriction data frame
 Data Name | Data Description | Conformance | Notes
 --------- | ---------------- | ----------- | -----
-**restrictionType** | the type of restriction from the Enum list of allowed restriction values | Required | restrictionType values are required for Restriction objects. This will mostly be the exting Enum, add flagged as new type.
+**restrictionType** | the type of restriction from the roadRestirctions enumerated list of allowed values | Required | Only one value is allowed. Required for  objects in the Restrictions data frame.
 **restrictionValue** | the measure of the restriction type | Conditional | must be used in conjunition with restrictionUnits
 **restrictionUnits** | the units of measure of the restrictionValue | Conditional | must be specified if a restrictionValue is used
 
 ### Enumerated Types
-#### Table 7. Enumerated Types Table
+#### Table 8. Enumerated Types Table
 Data Element | Used by | Allowed Values | Notes | Source
 ------------ | ------- | -------------- | ----- | ------
 **wz-Status** | WorkZoneActivity | See Enumerated Type<br>Definitions (Table 8) 
 **roadDirection** | BeginLocation | <ul><li>northbound</li><li>eastbound</li><li>southbound</li><li>westbound</li></ul> |  | Adapted from<br>TMDD link-<br>alignment
-**roadRestriction** | RoadRestrictions | <ul><li>no-trucks</li><li>travel-peak-hours-only</li><li>hov-3</li><li>hov-2</li><li>no-parking</li><li>bike-lane</li><li>ramp</li><li>towing-prohibited</li><li>permitted-oversize-loads-<br>prohibited (this applies to<br>annual oversize load<br>permits</li><li>reduced-width</li><li>reduced-height</li><li>reduced-length</li><li>reduced-weight</li><ul><li>axle-load-limit</li><li>gross-weight-limit</li></ul></ul> | Included one<br>or more<br>flags as needed | See<br>definitions<br>below
-**laneType** | openLanes,<br>closedLanes | <ul><li>all</li><ul><li>lane-1</li><ul><li>lane-2</li><ul><li>lane-3</li><ul><li>lane-4</li><ul><li>lane-5</li><ul><li>lane-6</li><ul><li>lane-7</li><ul><li>lane-8</li><li>left-lane</li><li>right-lane</li><li>left-2-lanes</li><li>left-3-lanes</li>right-2-lanes</li><li>right-3-lanes</li><li>center</li><li>middle-lane</li><li>right-turning-lane</li><li>left-turning-lane</li><li>right-exit-lane</li><li>left-exit-lane</li><li>right-merging-lane</li><li>left-merging-lane</li><li>right-exit-ramp</li><li>right-second-exit-ramp</li><li>right-entrance-ramp</li><li>right-second-entrance-ramp</li><li>left-exit-ramp</li><li>left-second-exit-ramp</li><li>left-entrance-ramp</li><li>left-second-entrance-ramp</li><li>sidewalk</li><li>bike-lane</li><li>none</li><li>unknown</li><li>alternate-flow-lane</li><li>shift-left</li><li>shift-right</li></ul> |  | Adapted from<br>TMDD<br>LaneRoadway
+**roadRestriction** | RoadRestrictions and restrictionValue | <ul><li>no-trucks</li><li>travel-peak-hours-only</li><li>hov-3</li><li>hov-2</li><li>no-parking</li><li>bike-lane</li><li>ramp</li><li>towing-prohibited</li><li>permitted-oversize-loads-<br>prohibited (this applies to<br>annual oversize load<br>permits</li><li>reduced-width</li><li>reduced-height</li><li>reduced-length</li><li>reduced-weight</li><ul><li>axle-load-limit</li><li>gross-weight-limit</li><li>flagged</li></ul></ul> | Included one or more flags as needed for the RoadRestrictions flag in the Core Data data frame. Include only one value when used in the restrictionType element of the Restriction data frame  | See<br>definitions<br>below
+**restrictionUnits** | restrictionUnits | <ul><li>feet</li><li>inches</li><li>pounds</li><li>tons</li></ul> | This is an intial list ov value and not intended to be complete. Add more as needed. | 
+**laneType** | laneType<br>in LaneImpact<br>data fram | <ul><li>all</li><li>lane-1</li><li>lane-2</li><li>lane-3</li><li>lane-4</li><li>lane-5</li><li>lane-6</li><li>lane-7</li><li>lane-8</li><li>left-lane</li><li>right-lane</li><li>left-2-lanes</li><li>left-3-lanes</li>right-2-lanes</li><li>right-3-lanes</li><li>center</li><li>middle-lane</li><li>right-turning-lane</li><li>left-turning-lane</li><li>right-exit-lane</li><li>left-exit-lane</li><li>right-merging-lane</li><li>left-merging-lane</li><li>right-exit-ramp</li><li>right-second-exit-ramp</li><li>right-entrance-ramp</li><li>right-second-entrance-ramp</li><li>left-exit-ramp</li><li>left-second-exit-ramp</li><li>left-entrance-ramp</li><li>left-second-entrance-ramp</li><li>sidewalk</li><li>bike-lane</li><li>none</li><li>unknown</li><li>alternate-flow-lane</li><li>shift-left</li><li>shift-right</li></ul> |  | Adapted from<br>TMDD<br>LaneRoadway
 **closedShoulders** | WorkZoneActivity | <ul><li>outside</li><li>inside</li><li>both</li><li>none</li><li>unknown</li></ul> |  | Adapted from<br>TMDD<br>LaneRoadway
+**impactType** | impactType | <ul><li>open</li><li>closed</li><li>shift-left</li><li>shift-right</li></ul> |  |
 
 ### Enumerated Type Definitions
-#### Table 8. Work Zone Status Definition Table
+#### Table 9. Work Zone Status Definition Table
 Term | WZ-Status Description
 ---- | ---------------------
 **Planned** | Planned status is associated with overall project or phase timing and locations.<br>Typically, this information is estimated during planning or early design phases. The<br>WZDx will not generally include planned activities.
@@ -247,7 +249,7 @@ Term | WZ-Status Description
 **Cancelled** | Reported cancellation of a proposed or active WZ; the coverage applies to the work zone activity record.<ul><li>When date/time is estimated, the cancellation may be one or more days<br>associated within the reported scheduled datetimes</li></ul>
 **Completed** | Work Zone is closed and completed; all work zone impacts are mitigated. This status<br>may be used when a work zone activity is completed earlier than expected.
 
-#### Table 9. Spatial and Time Verification Definitions
+#### Table 10. Spatial and Time Verification Definitions
 Term | WZ-Status Description
 ---- | ---------------------
 **DateTime<br>Estimated(-est)** | Specific times/dates when work will or is occurring; includes advanced notice of<br>activities or unverified work zone activities. This date/time may be reported in<br>advance, but is not actively verified on day of event.
@@ -255,7 +257,7 @@ Term | WZ-Status Description
 **Location<br>Estimated (-est)** | Estimated location associated with work zone activities and lane closures.<br>An estimated measurement may be based on an approximation of a location<br>referencing method (e.g., lat/long or milepost), for example: a point relative to a<br>posted milemarker, point on a map, or GPS device that provides less than<br>centimeter accuracy.
 **Location Verified<br>(-ver)** | Actual reported information about work zone locations. Actual location is<br>typically measured by a calibrated navigation or survey system to centimeter<br>accuracy (six decimal places for latitude and longitude).
 
-#### Table 10. RoadRestrictions Definitions
+#### Table 11. RoadRestrictions Definitions
 RoadRestrictions | Descriptions
 ---------------- | ------------
 **no-trucks** | Trucks are prohibited from traveling in work zone area
@@ -263,7 +265,6 @@ RoadRestrictions | Descriptions
 **hov-3** | Travel restricted to high occupancy vehicles of three or more
 **hov-2** | Travel restricted to high occupancy vehicles of two or more
 **no-parking** | No parking in work zone area
-**bike-lane** | Bike lane closed in work zone area
 **ramp** | Ramp closed in work zone area
 **reduced-width** | Lane width reduced in work zone area
 **reduced height** | Height restrictions reduced in work zone area
@@ -397,7 +398,7 @@ The static file shall be encoded as a comma delimited text file.
 
 **Filename:** WZ-Metadata.txt
 
-#### Table 11. Metadata
+#### Table 12. Metadata
 Data Name | Description | Example
 --------- | ----------- | -------
 **issuingOrganization** | The name of the issuing organization.<br>This name should match the name in the<br>WorkZoneActivity record. | “Anyplace public works”
